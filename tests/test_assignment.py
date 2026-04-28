@@ -4,6 +4,8 @@ import sys
 score = 0
 total = 2
 
+
+
 def run_test(input_data, expected_output):
     result = subprocess.run(
         [sys.executable, "main.py"],
