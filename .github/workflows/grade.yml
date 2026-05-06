@@ -20,12 +20,32 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt || true
           
-      - name: Run tests and save results
+      - name: Run tests and generate score
         run: |
           echo "Running tests..."
+          # Run your tests
           python tests/test_assignment.py | tee result.txt
+          
+          # IMPORTANT: We need to create a score.json file for Cyberflix.
+          # Option A: Modify your python script (test_assignment.py) to save a score.json file directly.
+          # Option B: If your python script prints the score like "Score: 85", you can extract it here:
+          
+          # Example extraction (uncomment and adjust if you want to extract from text):
+          # RAW_SCORE=$(grep -oP 'Score: \K\d+' result.txt || echo 0)
+          # echo "{\"score\": $RAW_SCORE}" > score.json
+          
+          # FOR NOW, assuming your python script creates score.json OR replacing it with a dummy 100 for testing:
+          # echo '{"score": 100}' > score.json
       
       - name: Show results in summary
         run: |
           echo "## 🧪 Grading Results" >> $GITHUB_STEP_SUMMARY
           cat result.txt >> $GITHUB_STEP_SUMMARY
+
+      # --- NEW STEP ADDED FOR CYBERFLIX ---
+      - name: Upload Score Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: auto-grading-result   # Must match exactly what the backend looks for
+          path: score.json            # The file containing {"score": 85}
+          retention-days: 7           # Delete after 7 days to save GitHub storage
