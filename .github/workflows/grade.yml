@@ -20,7 +20,7 @@ jobs:
       - name: Run tests
         # Replace 'test.py' with your actual path if it's inside a 'tests' folder!
         run: |
-          python test.py | tee result.txt
+          python tests/test_assignment.py | tee result.txt
       
       - name: Show results in summary
         if: always()
